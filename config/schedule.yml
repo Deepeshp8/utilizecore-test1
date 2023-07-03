@@ -1,0 +1,3 @@
+report_generate_job:
+  cron: “0 0 * * *”
+  class: "GenrateReportWorker"

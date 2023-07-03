@@ -1,0 +1,32 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Reports</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th colspan="2">Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%if @reports.present?%>
+    <% @reports.each do |report| %>
+      <tr>
+        <td><%= report.file_name %></td>
+        <td><%= link_to 'Download', download_report_path(report),target: "_blank" %></td>
+        <td><%= link_to 'Destroy', report, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+    <% else %>
+    <tr><td>No Information found.</td></tr>
+    <% end %>
+  </tbody>
+</table>
+<br>
+<%if @reports.present?%>
+<%= will_paginate @reports %>
+<% end %>
+<br>
+

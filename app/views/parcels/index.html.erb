@@ -22,6 +22,7 @@
   </thead>
 
   <tbody>
+    <%if @parcels.present?%>
     <% @parcels.each do |parcel| %>
       <tr>
         <td><%= parcel.weight %></td>
@@ -31,9 +32,18 @@
         <td><%= parcel.sender.name %></td>
         <td><%= parcel.receiver.name %></td>
         <td><%= link_to 'Show', parcel %></td>
+        <%if current_user.has_role? :admin %>
         <td><%= link_to 'Edit', edit_parcel_path(parcel) %></td>
+        <%end%>
         <td><%= link_to 'Destroy', parcel, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
+    <%else%>
+    <tr><td>No Information found.</td></tr>
+    <%end%>
   </tbody>
 </table>
+<br>
+<%if @parcels.present?%>
+<%= will_paginate @parcels %>
+<%end%>

@@ -18,11 +18,17 @@
   </thead>
 
   <tbody>
+    <%if @parcels.present?%>
     <% @parcels.each do |parcel| %>
       <tr>
         <td><%= parcel.id %></td>
         <td><%= parcel.status %></td>
       </tr>
     <% end %>
+    <%else%>
+      <tr><td>No Information found.</td></tr>
+    <%end%>
   </tbody>
 </table>
+
+<%= link_to 'Back', root_path %>

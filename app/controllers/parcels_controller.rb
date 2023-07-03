@@ -1,9 +1,16 @@
 class ParcelsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_parcel, only: %i[ show edit update destroy ]
+  load_and_authorize_resource
 
   # GET /parcels or /parcels.json
   def index
-    @parcels = Parcel.all
+    if current_user.has_role? :admin
+      @parcels = Parcel.all.order("id desc")
+    else
+      @parcels = Parcel.where("created_by = ?",current_user.id).order("id desc")
+    end
+    @parcels = @parcels.paginate(page: params[:page], per_page: 10)
   end
 
   # GET /parcels/1 or /parcels/1.json
@@ -13,27 +20,45 @@ class ParcelsController < ApplicationController
   # GET /parcels/new
   def new
     @parcel = Parcel.new
-    @users = User.all.map{|user| [user.name_with_address, user.id]}
+    if current_user.has_role? :admin
+      @users = User.all.order("id desc")
+    else
+      @users = User.where("created_by = ?",current_user.id).order("id desc")
+    end
+    @users = @users.map{|user| [user.name_with_address, user.id]}
     @service_types = ServiceType.all.map{|service_type| [service_type.name, service_type.id]}
   end
 
   # GET /parcels/1/edit
   def edit
-    @users = User.all.map{|user| [user.name_with_address, user.id]}
+    if current_user.has_role? :admin
+      @users = User.all.order("id desc")
+    else
+      @users = User.where("created_by = ?",current_user.id).order("id desc")
+    end
+    @users = @users.map{|user| [user.name_with_address, user.id]}
     @service_types = ServiceType.all.map{|service_type| [service_type.name, service_type.id]}
   end
 
   # POST /parcels or /parcels.json
   def create
     @parcel = Parcel.new(parcel_params)
-
+    if current_user.has_role? :user
+      @parcel.status = 'Pending'
+    end
+    @parcel.created_by = current_user.id
     respond_to do |format|
       if @parcel.save
         format.html { redirect_to @parcel, notice: 'Parcel was successfully created.' }
         format.json { render :show, status: :created, location: @parcel }
       else
         format.html do
-          @users = User.all.map{|user| [user.name_with_address, user.id]}
+          if current_user.has_role? :admin
+            @users = User.all.order("id desc")
+          else
+            @users = User.where("created_by = ?",current_user.id).order("id desc")
+          end
+          @users = @users.map{|user| [user.name_with_address, user.id]}
           @service_types = ServiceType.all.map{|service_type| [service_type.name, service_type.id]} 
           render :new, status: :unprocessable_entity
         end
@@ -72,8 +97,14 @@ class ParcelsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def parcel_params
-      params.require(:parcel).permit(:weight, :status, :service_type_id,
+      if current_user.has_role? :admin
+        params.require(:parcel).permit(:weight, :status, :service_type_id,
                                      :payment_mode, :sender_id, :receiver_id,
                                      :cost)
+      else
+        params.require(:parcel).permit(:weight, :service_type_id,
+          :payment_mode, :sender_id, :receiver_id,:cost)
+      end
+
     end
 end

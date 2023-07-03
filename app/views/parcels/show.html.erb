@@ -35,5 +35,7 @@
   <%= @parcel.cost %>
 </p>
 
-<%= link_to 'Edit', edit_parcel_path(@parcel) %> |
+<%if current_user.has_role? :admin%>
+<%= link_to 'Edit', edit_parcel_path(@parcel) %>
+<%end%>
 <%= link_to 'Back', parcels_path %>

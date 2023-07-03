@@ -11,6 +11,7 @@
   </thead>
 
   <tbody>
+    <%if @service_types.present?%>
     <% @service_types.each do |service_type| %>
       <tr>
         <td><%= service_type.name %></td>
@@ -19,9 +20,15 @@
         <td><%= link_to 'Destroy', service_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
+    <% else %>
+    <tr><td>No Information found.</td></tr>
+    <% end %>
   </tbody>
 </table>
-
+<br>
+<%if @service_types.present?%>
+<%= will_paginate @service_types %>
+<% end %>
 <br>
 
 <%= link_to 'New Service Type', new_service_type_path %>

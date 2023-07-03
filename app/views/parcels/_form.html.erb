@@ -15,11 +15,12 @@
     <%= form.label :weight %>
     <%= form.text_field :weight %>
   </div>
-
+  <%if current_user.has_role? :admin %>
   <div class="field">
     <%= form.label :status %>
     <%= form.select :status, Parcel::STATUS %>
   </div>
+  <%end%>
 
   <div class="field">
     <%= form.label :service_type_id %>
@@ -34,13 +35,13 @@
   <div class="field">
     <%= form.label :sender_id %>
     <%= form.select :sender_id, @users %>
-    <%= link_to 'New Sender', new_user_path %>
+    <%= link_to 'New Sender', new_users_admin_path %>
   </div>
 
   <div class="field">
     <%= form.label :receiver_id %>
     <%= form.select :receiver_id, @users %>
-    <%= link_to 'New Receiver', new_user_path %>
+    <%= link_to 'New Receiver', new_users_admin_path %>
   </div>
 
   <div class="field">

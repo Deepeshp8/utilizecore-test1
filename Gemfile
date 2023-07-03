@@ -54,3 +54,16 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+#Added devise gem for Authentication 
+gem "devise"
+#Added rolify gem to manage users roles 
+gem 'rolify'
+#Added xlsxtream gem to Generate excel file
+gem 'xlsxtream'
+#Added sidekiq-cron gem for Scheduling cron job
+gem "sidekiq-cron"
+#Added will_paginate gem for Pagination
+gem 'will_paginate', '~> 4.0'
+#Added cancancan gem for Authorisation
+gem 'cancancan'
